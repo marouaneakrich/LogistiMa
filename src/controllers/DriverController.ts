@@ -8,7 +8,7 @@ export const createDriver = async (req: Request, res: Response) => {
     const { name, phone, latitude, Logitude,longitude,capacity,staus } = req.body;
 
     const zone = await Zone.create({
-     name, phone, latitude, Logitude,longitude,capacity,staus
+     name, phone, latitude, Logitude,longitude,capacity,staus 
     });
 
     res.status(201).json({
@@ -29,7 +29,11 @@ export const getAllDrivers = async (req: Request, res: Response) => {
     const driver = await Driver.findAll();
     res.json(driver);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    if (error instanceof Error) {
+      res.status(500).json({ error: error.message });
+    } else {
+      res.status(500).json({ error: "Unknown error" });
+    }
   }
 };
 //get driver by id
@@ -49,7 +53,11 @@ export const getDriverById = async (req: Request, res: Response) => {
 
     res.status(200).json(driver);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    if (error instanceof Error) {
+      res.status(500).json({ error: error.message });
+    } else {
+      res.status(500).json({ error: "Unknown error" });
+    }
   }
 };
 //delete driver by id
@@ -64,14 +72,18 @@ export const deleteDriver = async (req: Request, res: Response) => {
     await driver.destroy();
     res.status(200).json({ message: "Driver deleted successfully" });
   } catch (error) {
-    res.status(500).json({ error: error.message });
-
-  }};
+    if (error instanceof Error) {
+      res.status(500).json({ error: error.message });
+    } else {
+      res.status(500).json({ error: "Unknown error" });
+    }
+  }
+};
 //update driver by id
 export const updateDriver = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const { name, phone, latitude, Logitude,longitude,capacity,staus } = req.body;
+    const { name, phone, latitude,longitude,capacity,staus } = req.body;
     const zone = await Zone.findByPk(id);
 
     if (!zone) {
