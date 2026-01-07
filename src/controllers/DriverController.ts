@@ -1,56 +1,101 @@
-// import Driver from "../models/Driver.js";
+import Driver from "../models/Driver";
+import Zone from "../models/Zone";
+import { Request, Response } from "express";
 
+//create a new driver
+export const createDriver = async (req: Request, res: Response) => {
+  try {
+    const { name, phone, latitude, Logitude,longitude,capacity,staus } = req.body;
 
-// export const createCourse = async (req, res) => {
-//   try {
-//     const { id_user, title, descreption, date_creation } = req.body;
+    const zone = await Zone.create({
+     name, phone, latitude, Logitude,longitude,capacity,staus
+    });
 
-//     const cours = await Cours.create({
-//       id_user,
-//       title,
-//       descreption,
-//       date_creation,
-//     });
-//     const newCourse = await Cours.create({
-//       id_user,
-//       title,
-//       descreption,
-//       date_creation,
-//     });
-//     res.status(201).json({
-//       message: "Course created successfully",
-//       cours,
-//     });
-//   } catch (error) {
-//     res.status(500).json({ error: error.message });
-//   }
-// };
+    res.status(201).json({
+      message: "Driver created successfully",
+      zone,
+    });
+  } catch (error) {
+    if (error instanceof Error) {
+      res.status(500).json({ error: error.message });
+    } else {
+      res.status(500).json({ error: "Unknown error" });
+    }
+  }
+};
+// Get all drivers
+export const getAllDrivers = async (req: Request, res: Response) => {
+  try {
+    const driver = await Driver.findAll();
+    res.json(driver);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+//get driver by id
+export const getDriverById = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
 
-// export const getAllCours = async (req, res) => {
-//   try {
-//     const cours = await Cours.findAll();
-//     res.json(cours);
-//   } catch (error) {
-//     res.status(500).json({ error: error.message });
-//   }
-// };
+    const driver = await Driver.findByPk(id, {
+      include: {
+        model:Driver ,
+      },
+    });
 
-// export const getCoursById = async (req, res) => {
-//   try {
-//     const { id } = req.params;
+    if (!driver) {
+      return res.status(404).json({ message: "driver not found" });
+    }
 
-//     const cours = await Cours.findByPk(id, {
-//       include: {
-//         model: Lesson,
-//       },
-//     });
+    res.status(200).json(driver);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+//delete driver by id
+export const deleteDriver = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;  
+    const driver = await Driver.findByPk(id);
 
-//     if (!cours) {
-//       return res.status(404).json({ message: "Cours not found" });
-//     }
+    if (!driver) {
+      return res.status(404).json({ message: "Driver not found" });
+    }
+    await driver.destroy();
+    res.status(200).json({ message: "Driver deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
 
-//     res.status(200).json(cours);
-//   } catch (error) {
-//     res.status(500).json({ error: error.message });
-//   }
-// };
+  }};
+//update driver by id
+export const updateDriver = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const { name, phone, latitude, Logitude,longitude,capacity,staus } = req.body;
+    const zone = await Zone.findByPk(id);
+
+    if (!zone) {
+      return res.status(404).json({ message: "Zone not found" });
+    }
+
+    if (name !== undefined) zone.set("name", name);
+    if (phone !== undefined) zone.set("phone", String(phone));
+    if (latitude !== undefined) zone.set("latitude", String(latitude));
+    if (longitude !== undefined) zone.set("longitude", String(longitude));
+    if (capacity !== undefined) zone.set("capacity", String(capacity));
+    if (staus !== undefined) zone.set("status", String(staus));
+
+    await zone.save();
+
+    return res.status(200).json({
+      message: "Zone updated successfully",
+      zone,
+    });
+  } catch (error) {
+    if (error instanceof Error) {
+      return res.status(500).json({ error: error.message });
+    }
+
+    return res.status(500).json({ error: "Unknown error" });
+  }
+};
