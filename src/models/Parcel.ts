@@ -39,3 +39,4 @@ Parcel.init(
     timestamps: true
   }
 );
+export default Parcel;

@@ -33,7 +33,11 @@ export const getAllZones = async (req: Request, res: Response) => {
     const zone = await Zone.findAll();
     res.json(zone);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    if (error instanceof Error) {
+      res.status(500).json({ error: error.message });
+    } else {
+      res.status(500).json({ error: "Unknown error" });
+    }
   }
 };
 
@@ -53,7 +57,11 @@ export const getZoneById = async (req: Request, res: Response) => {
 
     res.status(200).json(zone);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    if (error instanceof Error) {
+      res.status(500).json({ error: error.message });
+    } else {
+      res.status(500).json({ error: "Unknown error" });
+    }
   }
 };
 //detete zone by id
@@ -69,7 +77,11 @@ export const deleteZone = async (req: Request, res: Response) => {
     await zone.destroy();
     res.status(200).json({ message: "Zone deleted successfully" });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    if (error instanceof Error) {
+      res.status(500).json({ error: error.message });
+    } else {
+      res.status(500).json({ error: "Unknown error" });
+    }
   }
 };
 

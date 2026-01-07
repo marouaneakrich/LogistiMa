@@ -32,7 +32,7 @@ export class DeliveryController {
 
     } catch (error) {
       if (error instanceof ConflictError) {
-        res.status(409).json({ error: error.message });
+        res.status(409).json({ error: (error as ConflictError).message });
         return;
       }
       

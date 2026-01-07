@@ -44,3 +44,4 @@ Delivery.init(
     timestamps: true
   }
 );
+export default Delivery;
