@@ -4,6 +4,6 @@ import { DeliveryController } from '../controllers/DeliveryController';
 const router = Router();
 
 router.post('/assign', DeliveryController.assignPackage);
-router.get('/parcel/:id', DeliveryController.getParcelStatus);
+router.get('/parcel/:id', DeliveryController.getPackageStatus);
 
 export default router;
