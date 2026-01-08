@@ -7,7 +7,9 @@ import deliveryRoutes from './routes/delivery.routes';
 const app = express();
 
 app.use(helmet());
-app.use(cors());
+app.use(cors({
+  origin: ['https://logistima.up.railway.app/']
+}));
 app.use(express.json({ limit: '10mb' }));
 
 const limiter = rateLimit({
