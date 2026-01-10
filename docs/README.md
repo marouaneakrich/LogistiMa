@@ -320,9 +320,12 @@ Contributions are welcome! Please follow these steps:
 
 ## UML Diagram
 
-![LogistiMa UML Diagram](./docs/uml/diagram.png)
+![LogistiMa UML Class Diagram](/docs/uml/diagram.png)
 
-[📥 Download UML Diagram](./docs/uml/diagram.png)
+![LogistiMa UML Use Case Diagram](/docs/uml/UseCase_Diagram.png)
+
+[📥 Download UML Diagram](/docs/uml/diagram.png)
+[📥 Download UML Use Case Diagram](/docs/uml/UseCase_Diagram.png)
 
 ## 📝 License
 
