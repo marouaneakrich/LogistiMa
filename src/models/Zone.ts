@@ -1,7 +1,17 @@
-import { DataTypes } from "sequelize";
-import sequelize from "../config/database.js";
-const Zone = sequelize.define(
-  "Zone",
+import { Model, DataTypes } from 'sequelize';
+import sequelize from '../config/database';
+
+export class Zone extends Model {
+  public id!: number;
+  public name!: string;
+  public centerLat!: number | null;
+  public centerLng!: number | null;
+  public radius!: number | null;
+  public readonly createdAt!: Date;
+  public readonly updatedAt!: Date;
+}
+
+Zone.init(
   {
     id: {
       type: DataTypes.INTEGER,
@@ -12,30 +22,38 @@ const Zone = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    centraLat: {
+    centerLat: {
       type: DataTypes.DECIMAL(10, 8),
-      allowNull: false,
+      allowNull: true,
+      field: 'center_lat'
     },
-    centraLng: {
+    centerLng: {
       type: DataTypes.DECIMAL(10, 8),
-      allowNull: false,
+      allowNull: true,
       unique: true,
+      field: 'center_lng'
     },
     radius: {
-type: DataTypes.DECIMAL(10, 8) ,    
- allowNull: false,
+      type: DataTypes.DECIMAL(10, 8),
+      allowNull: true,
     },
-    
+    createdAt: {
+      type: DataTypes.DATE,
+      allowNull: true,
+      field: 'created_at'
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+      allowNull: true,
+      field: 'updated_at'
+    }
   },
   {
-    tableName: "zones",
-    timestamps: true, // createdAt + updatedAt automatiques
-    createdAt: "created_at",
-    updatedAt: "updated_at",
+    sequelize,
+    tableName: 'zones',
+    timestamps: true,
+    underscored: true,
   }
 );
 
 export default Zone;
-
-
-

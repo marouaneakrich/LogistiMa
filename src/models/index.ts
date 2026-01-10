@@ -1,23 +1,25 @@
-import  sequelize from "../config/database";
-import  Zone from  "./Zone";
-import  Driver from  "./Driver";
-import  Delivery from  "./Delivery";  
-import  Parcel from  "./Parcel";  
+import sequelize from "../config/database";
+import Zone from "./Zone";
+import Driver from "./Driver";
+import Delivery from "./Delivery";
+import Parcel from "./Parcel";
 
-Zone.hasMany(Driver, { foreignKey: "ZoneId" });
-Driver.belongsTo(Zone, { foreignKey: "ZoneId" });
+Zone.hasMany(Driver, { foreignKey: "zoneId", as: "drivers" });
+Driver.belongsTo(Zone, { foreignKey: "zoneId", as: "zone" });
 
-Zone.hasMany(Parcel, { foreignKey: "ZoneId" });
-Parcel.belongsTo(Zone, { foreignKey: "ZoneId" });
+Zone.hasMany(Parcel, { foreignKey: "zoneId", as: "parcels" });
+Parcel.belongsTo(Zone, { foreignKey: "zoneId", as: "zone" });
 
-Driver.hasMany(Delivery, { foreignKey: "DriverId" });
-Delivery.belongsTo(Driver, { foreignKey: "DriverId" });
+Driver.hasMany(Delivery, { foreignKey: "driverId", as: "deliveries" });
+Delivery.belongsTo(Driver, { foreignKey: "driverId", as: "driver" });
 
-Driver.hasMany(Parcel, { foreignKey: "DriverId" });
-Parcel.belongsTo(Driver, { foreignKey: "DriverId" });
 
-Delivery.hasOne(Parcel, { foreignKey: "DeliveryId" });
-Parcel.belongsTo(Delivery, { foreignKey: "DeliveryId" });
+Driver.hasMany(Parcel, { foreignKey: "driverId", as: "parcels" });
+Parcel.belongsTo(Driver, { foreignKey: "driverId", as: "driver" });
+
+
+Delivery.hasMany(Parcel, { foreignKey: "deliveryId", as: "parcels" });
+Parcel.belongsTo(Delivery, { foreignKey: "deliveryId", as: "delivery" });
 
 export const initializeDatabase = async () => {
   try {

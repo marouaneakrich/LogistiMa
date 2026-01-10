@@ -6,12 +6,12 @@ import { Request, Response } from "express";
 
 export const createZone = async (req: Request, res: Response) => {
   try {
-    const { name, centraLat, centraLng, radius } = req.body;
+    const { name, centerLat, centerLng, radius } = req.body;
 
     const zone = await Zone.create({
       name,
-      centraLat,
-      centraLng,
+      centerLat,
+      centerLng,
       radius,
     });
 
@@ -47,7 +47,7 @@ export const getZoneById = async (req: Request, res: Response) => {
 
     const zone = await Zone.findByPk(id, {
       include: {
-        model:Driver ,
+        model: Driver,
       },
     });
 
@@ -67,12 +67,12 @@ export const getZoneById = async (req: Request, res: Response) => {
 //detete zone by id
 export const deleteZone = async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;      
+    const { id } = req.params;
 
     const zone = await Zone.findByPk(id);
     if (!zone) {
       return res.status(404).json({ message: "Zone not found" });
-    } 
+    }
 
     await zone.destroy();
     res.status(200).json({ message: "Zone deleted successfully" });
@@ -91,7 +91,7 @@ export const updateZone = async (req: Request, res: Response) => {
   try {
     const id = Number(req.params.id);
 
-    const { name, centraLat, centraLng, radius } = req.body;
+    const { name, centerLat, centerLng, radius } = req.body;
 
     const zone = await Zone.findByPk(id);
 
@@ -100,9 +100,9 @@ export const updateZone = async (req: Request, res: Response) => {
     }
 
     if (name !== undefined) zone.set("name", name);
-    if (centraLat !== undefined) zone.set("centraLat", String(centraLat));
-    if (centraLng !== undefined) zone.set("centraLng", String(centraLng));
-    if (radius !== undefined) zone.set("radius", String(radius));
+    if (centerLat !== undefined) zone.set("centerLat", centerLat);
+    if (centerLng !== undefined) zone.set("centerLng", centerLng);
+    if (radius !== undefined) zone.set("radius", radius);
 
     await zone.save();
 
@@ -119,4 +119,4 @@ export const updateZone = async (req: Request, res: Response) => {
   }
 };
 
-    
+

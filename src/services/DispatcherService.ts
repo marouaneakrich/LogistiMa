@@ -30,8 +30,8 @@ export class DispatcherService {
             }
 
             await slot.update({
-                remainingCapacity: slot.remainingCapacity - 1,
-                available: slot.remainingCapacity - 1 > 0
+                remainingCapacity: slot.remainingCapacity! - 1,
+                available: (slot.remainingCapacity! - 1) > 0
             }, { transaction });
 
             await Parcel.update({
