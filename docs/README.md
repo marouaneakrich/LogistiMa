@@ -316,7 +316,7 @@ Contributions are welcome! Please follow these steps:
 
 ## 📘 API Docs
 
-[🌐 View API Docs](https://logistima.up.railway.app/)
+[🌐 View API Docs](https://logistima.up.railway.app/api-docs)
 
 ## UML Diagram
 
