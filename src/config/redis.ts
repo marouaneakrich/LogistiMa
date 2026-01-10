@@ -1,15 +1,16 @@
-import { Redis } from 'ioredis';
+import 'dotenv/config';
+import { Redis, RedisOptions } from 'ioredis';
 
-export const redisConnection = {
-  url: process.env.REDIS_URL,
-  maxRetriesPerRequest: 3,
-  retryStrategy: (times: number) => {
-    const delay = Math.min(times * 50, 2000);
-    return delay;
-  }
+const baseConfig: RedisOptions = {
+  maxRetriesPerRequest: null,
+  retryStrategy: (times: number) => Math.min(times * 50, 2000)
 };
 
-export const redisClient = new Redis(redisConnection);
+export const redisConnection = baseConfig;
+
+export const redisClient = process.env.REDIS_URL
+  ? new Redis(process.env.REDIS_URL, baseConfig)
+  : new Redis(baseConfig);
 
 redisClient.on('connect', () => {
   console.log('✅ Redis client connected');

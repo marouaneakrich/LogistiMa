@@ -1,12 +1,16 @@
 import { Model, DataTypes } from 'sequelize';
-import { sequelize } from '../config/database';
+import sequelize from '../config/database';
 
 export class Parcel extends Model {
   public id!: number;
   public status!: 'PENDING' | 'ASSIGNED' | 'IN_TRANSIT' | 'DELIVERED';
-  public pickupAddress!: string;
-  public deliveryAddress!: string;
-  public driverId?: number;
+  public pickupAddress!: string | null;
+  public deliveryAddress!: string | null;
+  public driverId!: number | null;
+  public zoneId!: number | null;
+  public deliveryId!: number | null;
+  public readonly createdAt!: Date;
+  public readonly updatedAt!: Date;
 }
 
 Parcel.init(
@@ -14,29 +18,54 @@ Parcel.init(
     id: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
-      primaryKey: true
+      primaryKey: true,
     },
     status: {
       type: DataTypes.ENUM('PENDING', 'ASSIGNED', 'IN_TRANSIT', 'DELIVERED'),
-      defaultValue: 'PENDING'
+      defaultValue: 'PENDING',
     },
     pickupAddress: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: true,
+      field: 'pickup_address'
     },
     deliveryAddress: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: true,
+      field: 'delivery_address'
     },
     driverId: {
       type: DataTypes.INTEGER,
-      allowNull: true
+      allowNull: true,
+      field: 'driver_id'
+    },
+    zoneId: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      field: 'zone_id'
+    },
+    deliveryId: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      field: 'delivery_id'
+    },
+    createdAt: {
+      type: DataTypes.DATE,
+      allowNull: true,
+      field: 'created_at'
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+      allowNull: true,
+      field: 'updated_at'
     }
   },
   {
     sequelize,
     tableName: 'parcels',
-    timestamps: true
+    timestamps: true,
+    underscored: true,
   }
 );
+
 export default Parcel;

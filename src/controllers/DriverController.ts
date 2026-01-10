@@ -5,15 +5,15 @@ import { Request, Response } from "express";
 //create a new driver
 export const createDriver = async (req: Request, res: Response) => {
   try {
-    const { name, phone, latitude, Logitude,longitude,capacity,staus } = req.body;
+    const { name, phone, latitude, longitude, capacity, status, zoneId } = req.body;
 
-    const zone = await Zone.create({
-     name, phone, latitude, Logitude,longitude,capacity,staus 
+    const driver = await Driver.create({
+      name, phone, latitude, longitude, capacity, status, zoneId
     });
 
     res.status(201).json({
       message: "Driver created successfully",
-      zone,
+      driver,
     });
   } catch (error) {
     if (error instanceof Error) {
@@ -26,8 +26,8 @@ export const createDriver = async (req: Request, res: Response) => {
 // Get all drivers
 export const getAllDrivers = async (req: Request, res: Response) => {
   try {
-    const driver = await Driver.findAll();
-    res.json(driver);
+    const drivers = await Driver.findAll();
+    res.json(drivers);
   } catch (error) {
     if (error instanceof Error) {
       res.status(500).json({ error: error.message });
@@ -43,7 +43,8 @@ export const getDriverById = async (req: Request, res: Response) => {
 
     const driver = await Driver.findByPk(id, {
       include: {
-        model:Driver ,
+        model: Zone,
+        as: 'zone',
       },
     });
 
@@ -63,7 +64,7 @@ export const getDriverById = async (req: Request, res: Response) => {
 //delete driver by id
 export const deleteDriver = async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;  
+    const { id } = req.params;
     const driver = await Driver.findByPk(id);
 
     if (!driver) {
@@ -83,25 +84,26 @@ export const deleteDriver = async (req: Request, res: Response) => {
 export const updateDriver = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const { name, phone, latitude,longitude,capacity,staus } = req.body;
-    const zone = await Zone.findByPk(id);
+    const { name, phone, latitude, longitude, capacity, status, zoneId } = req.body;
+    const driver = await Driver.findByPk(id);
 
-    if (!zone) {
-      return res.status(404).json({ message: "Zone not found" });
+    if (!driver) {
+      return res.status(404).json({ message: "Driver not found" });
     }
 
-    if (name !== undefined) zone.set("name", name);
-    if (phone !== undefined) zone.set("phone", String(phone));
-    if (latitude !== undefined) zone.set("latitude", String(latitude));
-    if (longitude !== undefined) zone.set("longitude", String(longitude));
-    if (capacity !== undefined) zone.set("capacity", String(capacity));
-    if (staus !== undefined) zone.set("status", String(staus));
+    if (name !== undefined) driver.set("name", name);
+    if (phone !== undefined) driver.set("phone", phone);
+    if (latitude !== undefined) driver.set("latitude", latitude);
+    if (longitude !== undefined) driver.set("longitude", longitude);
+    if (capacity !== undefined) driver.set("capacity", capacity);
+    if (status !== undefined) driver.set("status", status);
+    if (zoneId !== undefined) driver.set("zoneId", zoneId);
 
-    await zone.save();
+    await driver.save();
 
     return res.status(200).json({
-      message: "Zone updated successfully",
-      zone,
+      message: "Driver updated successfully",
+      driver,
     });
   } catch (error) {
     if (error instanceof Error) {
