@@ -9,6 +9,11 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: postgresql://test:test@localhost:5432/logistima_test
+      REDIS_URL: redis://localhost:6379
+      NODE_ENV: test
+      PORT: 3000
     
     services:
       postgres:
@@ -42,23 +47,16 @@ jobs:
       
       - name: Run tests
         run: npm test
-        env:
-          DATABASE_URL: ${DATABASE_URL}
-          REDIS_URL: ${REDIS_URL}
-          NODE_ENV: ${NODE_ENV}
       
       - name: Run stress test
         run: npm run test:stress
-        env:
-          DATABASE_URL:  ${DATABASE_URL}
-          REDIS_URL: ${REDIS_URL}
       
       - name: Build Docker image
         run: docker build -t logistima-test .
       
       - name: Test Docker Compose
         run: |
-          docker-compose -f docker-compose.yml up -d
-          sleep 10
-          curl -f http://localhost:${PORT}/health || exit 1
+          docker-compose up -d
+          sleep 15
+          curl -f http://localhost:3000/health || exit 1
           docker-compose down

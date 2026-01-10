@@ -1,16 +1,19 @@
 import "dotenv/config";
 import { Sequelize } from 'sequelize';
 
-const sequelize = process.env.DATABASE_URL
-    ? new Sequelize(process.env.DATABASE_URL, {
+const isTest = process.env.NODE_ENV === 'test';
+const databaseUrl = process.env.DATABASE_URL;
+
+const sequelize = databaseUrl
+    ? new Sequelize(databaseUrl, {
         dialect: "postgres",
-        logging: console.log,
-        dialectOptions: {
+        logging: isTest ? false : console.log,
+        dialectOptions: !isTest ? {
             ssl: {
                 require: true,
                 rejectUnauthorized: false
             }
-        }
+        } : {}
     })
     : new Sequelize({
         database: 'logistima',
